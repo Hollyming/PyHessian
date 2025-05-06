@@ -47,6 +47,16 @@ env/
 venv/
 ENV/
 
+# Model
+data/
+*.pkl
+*.pth
+*.pt
+*.pth.tar
+*.pth.tar.gz
+*.npz
+*.npy
+
 # IDE相关
 .idea/
 .vscode/

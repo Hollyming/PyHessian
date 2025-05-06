@@ -7,7 +7,8 @@ SEED=42
 BATCH_NORM=true
 RESIDUAL=true
 CUDA=true
-RESUME="checkpoints/resnet20_cifar10.pth"
+RESUME="./checkpoints/resnet20_cifar10.pkl"
+GPU_ID=5  # 默认使用的GPU ID
 
 # 显示使用说明
 function show_usage {
@@ -19,6 +20,7 @@ function show_usage {
     echo "  --no-batch-norm            在ResNet中不使用batch norm (默认启用batch norm)"
     echo "  --no-residual              不使用残差连接 (默认启用残差)"
     echo "  --no-cuda                  不使用GPU (默认使用GPU)"
+    echo "  --gpu                      指定使用的GPU ID (默认: 0)"
     echo "  --resume PATH              检查点文件路径 (必填)"
     echo "  --help                     显示此帮助信息"
 }
@@ -50,6 +52,10 @@ while [[ $# -gt 0 ]]; do
             CUDA=false
             shift
             ;;
+        --gpu)
+            GPU_ID="$2"
+            shift 2
+            ;;
         --resume)
             RESUME="$2"
             shift 2
@@ -74,7 +80,7 @@ if [ -z "$RESUME" ]; then
 fi
 
 # 构建命令
-CMD="export CUDA_VISIBLE_DEVICES=0; python example_pyhessian_analysis.py --mini-hessian-batch-size $MINI_HESSIAN_BATCH_SIZE --hessian-batch-size $HESSIAN_BATCH_SIZE --seed $SEED --resume $RESUME"
+CMD="export CUDA_VISIBLE_DEVICES=$GPU_ID; python example_pyhessian_analysis.py --mini-hessian-batch-size $MINI_HESSIAN_BATCH_SIZE --hessian-batch-size $HESSIAN_BATCH_SIZE --seed $SEED --resume $RESUME"
 
 # 添加可选标志参数
 if [ "$BATCH_NORM" = false ]; then
